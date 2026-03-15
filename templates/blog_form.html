@@ -1,1 +1,33 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rewrite & Post Blog</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; }
+        input, textarea { width: 100%; padding: 8px; margin: 10px 0; }
+        .btn { background-color: #28a745; color: white; padding: 10px; border: none; width: 100%; cursor: pointer; }
+        .flash { color: green; }
+    </style>
+</head>
+<body>
+    <h2>Rewrite Article & Post to Blogger</h2>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <form method="post">
+        <label>Article URL:</label>
+        <input type="url" name="article_url" placeholder="https://example.com/article" required>
+        
+        <p>Yeh URL se article extract karega, AI se rewrite karega, aur Blogger par post karega.</p>
+        
+        <button type="submit" class="btn">Rewrite & Post to Blogger</button>
+    </form>
+    <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
+</body>
+</html>

@@ -1,1 +1,55 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
+        .card { border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        .btn { display: inline-block; padding: 8px 15px; margin: 5px; text-decoration: none; border-radius: 3px; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-info { background-color: #17a2b8; color: white; }
+        .connected { color: green; font-weight: bold; }
+        .not-connected { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Welcome, {{ current_user.username }}!</h1>
+    <a href="{{ url_for('logout') }}" style="float: right;">Logout</a>
+    
+    <div class="card">
+        <h3>Quick Actions</h3>
+        <a href="{{ url_for('post') }}" class="btn btn-primary">➕ Create New Post</a>
+        <a href="{{ url_for('blog') }}" class="btn btn-success">📝 Rewrite & Post Blog</a>
+    </div>
+    
+    <div class="card">
+        <h3>Connected Platforms</h3>
+        <ul>
+            <li>Twitter: 
+                {% if current_user.twitter_token %}
+                    <span class="connected">✅ Connected</span>
+                {% else %}
+                    <span class="not-connected">❌ Not Connected</span>
+                    <a href="{{ url_for('connect_twitter') }}" class="btn btn-info">Connect</a>
+                {% endif %}
+            </li>
+            <li>YouTube: 
+                {% if current_user.youtube_token %}
+                    <span class="connected">✅ Connected</span>
+                {% else %}
+                    <span class="not-connected">❌ Not Connected</span>
+                    <a href="{{ url_for('connect_youtube') }}" class="btn btn-info">Connect</a>
+                {% endif %}
+            </li>
+            <li>Facebook: 
+                {% if os.getenv('FACEBOOK_PAGE_ACCESS_TOKEN') %}
+                    <span class="connected">✅ Configured</span>
+                {% else %}
+                    <span class="not-connected">❌ Not Configured</span>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

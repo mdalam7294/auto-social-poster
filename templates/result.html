@@ -1,1 +1,25 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Post Results</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; }
+        .success { color: green; background: #e8f5e9; padding: 10px; margin: 5px 0; border-radius: 3px; }
+        .error { color: red; background: #ffebee; padding: 10px; margin: 5px 0; border-radius: 3px; }
+        .btn { display: inline-block; background-color: #007bff; color: white; padding: 10px; text-decoration: none; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h2>Posting Results</h2>
+    {% for platform, result in results.items() %}
+        <div class="{% if '✅' in result %}success{% else %}error{% endif %}">
+            <strong>{{ platform|upper }}:</strong> {{ result }}
+        </div>
+    {% else %}
+        <p>No platforms selected or posted.</p>
+    {% endfor %}
+    
+    <a href="{{ url_for('post') }}" class="btn">Create Another Post</a>
+    <a href="{{ url_for('dashboard') }}" class="btn">Go to Dashboard</a>
+</body>
+</html>

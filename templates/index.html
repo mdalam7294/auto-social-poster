@@ -1,1 +1,18 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auto Social Poster</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; text-align: center; }
+        .btn { display: inline-block; padding: 10px 20px; margin: 10px; text-decoration: none; color: white; border-radius: 5px; }
+        .btn-primary { background-color: #007bff; }
+        .btn-success { background-color: #28a745; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Auto Social Poster</h1>
+    <p>Ek hi jagah se sabhi social media par post karein!</p>
+    <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a>
+    <a href="{{ url_for('register') }}" class="btn btn-success">Register</a>
+</body>
+</html>

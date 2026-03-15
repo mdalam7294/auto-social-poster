@@ -1,1 +1,48 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Post</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; }
+        input, textarea, select { width: 100%; padding: 8px; margin: 10px 0; }
+        .btn { background-color: #007bff; color: white; padding: 10px; border: none; width: 100%; cursor: pointer; }
+        .checkbox-group { display: flex; flex-wrap: wrap; }
+        .checkbox-group label { width: 150px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Create New Post</h2>
+    <form method="post" enctype="multipart/form-data">
+        <label>Select Platforms:</label>
+        <div class="checkbox-group">
+            <label><input type="checkbox" name="platforms" value="twitter"> Twitter</label>
+            <label><input type="checkbox" name="platforms" value="facebook"> Facebook</label>
+            <label><input type="checkbox" name="platforms" value="instagram"> Instagram</label>
+            <label><input type="checkbox" name="platforms" value="pinterest"> Pinterest</label>
+            <label><input type="checkbox" name="platforms" value="reddit"> Reddit</label>
+            <label><input type="checkbox" name="platforms" value="youtube"> YouTube (Thumbnail)</label>
+        </div>
+        
+        <label>Caption / Description:</label>
+        <textarea name="caption" rows="4" required></textarea>
+        
+        <label>Title (for Reddit/Pinterest):</label>
+        <input type="text" name="title">
+        
+        <label>Image (for most platforms):</label>
+        <input type="file" name="image" accept="image/*">
+        
+        <label>Link (optional):</label>
+        <input type="url" name="link" placeholder="https://...">
+        
+        <label>YouTube Video ID (if YouTube selected):</label>
+        <input type="text" name="video_id" placeholder="e.g. dQw4w9WgXcQ">
+        
+        <label>Reddit Subreddit (if Reddit selected):</label>
+        <input type="text" name="subreddit" value="test" placeholder="subreddit name">
+        
+        <button type="submit" class="btn">Post Now!</button>
+    </form>
+    <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
+</body>
+</html>

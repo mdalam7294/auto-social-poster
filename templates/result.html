@@ -1,14 +1,86 @@
 <!DOCTYPE html>
-<html>
-<head><title>Result</title>
-<style>body{font-family:Arial;max-width:600px;margin:20px auto;padding:20px}.success{color:green}.error{color:red}</style>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result | Auto Social Poster</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9edf2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 550px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 40px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 40px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 25px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        .btn-outline {
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .check-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-<h2>Upload Result</h2>
-<div class="{% if '✅' in result %}success{% else %}error{% endif %}">
-{{ result }}
-</div>
-<a href="{{ url_for('process') }}">Process Another Video</a> | 
-<a href="{{ url_for('dashboard') }}">Dashboard</a>
+    <div class="card">
+        {% if '✅' in result %}
+            <div class="check-icon">✅</div>
+            <div class="success">{{ result }}</div>
+        {% else %}
+            <div class="error">{{ result }}</div>
+        {% endif %}
+        <div class="btn-group">
+            <a href="{{ url_for('process') }}" class="btn btn-primary">Process Another Video</a>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline">Dashboard</a>
+        </div>
+    </div>
 </body>
 </html>

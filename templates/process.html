@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Process Video</title>
+<style>body{font-family:Arial;max-width:600px;margin:20px auto;padding:20px}input,button{width:100%;padding:10px;margin:10px 0}.btn{background:#007bff;color:#fff;border:none;cursor:pointer}</style>
+</head>
+<body>
+<h2>Enter Video Link</h2>
+{% with messages = get_flashed_messages() %}{% if messages %}<div style="color:red">{% for m in messages %}{{ m }}{% endfor %}</div>{% endif %}{% endwith %}
+<form method="post">
+<input type="url" name="video_url" placeholder="YouTube, Instagram, Facebook URL" required>
+<button type="submit" class="btn">Process & Upload</button>
+</form>
+<p><a href="{{ url_for('dashboard') }}">Back</a></p>
+</body>
+</html>

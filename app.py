@@ -2,11 +2,15 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt
 from models import db, User
-from utils.social import upload_youtube_video
 from utils.auth import youtube_auth_url, youtube_callback_handler
+from utils.downloader import download_video
+from utils.transformer import recreate_video
+from utils.seo import generate_high_rpm_seo
+from utils.scheduler import schedule_upload
+from utils.social import upload_youtube_video
 import os
-from dotenv import load_dotenv
 import secrets
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -28,6 +32,7 @@ os.makedirs('tokens', exist_ok=True)
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# ------------------- Routes -------------------
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -88,40 +93,52 @@ def youtube_callback():
         flash('YouTube connection failed')
     return redirect(url_for('dashboard'))
 
-@app.route('/post', methods=['GET', 'POST'])
+@app.route('/process', methods=['GET', 'POST'])
 @login_required
-def post():
+def process():
     if request.method == 'POST':
-        caption = request.form['caption']
-        title = request.form.get('title', caption[:80])
-        tags = [t.strip() for t in request.form.get('tags', '').split(',') if t.strip()]
-        privacy = request.form.get('privacy', 'public')
+        video_url = request.form['video_url']
+        if not video_url:
+            flash('Please enter a video URL')
+            return redirect(url_for('process'))
 
-        media_file = request.files.get('media')
-        if not media_file or not media_file.filename:
-            flash('Please select a video file to upload.')
-            return redirect(url_for('post'))
+        try:
+            # 1. Download video
+            temp_video = f"static/temp/{secrets.token_hex(8)}_original.mp4"
+            download_video(video_url, temp_video)
 
-        # Check if it's a video
-        if not media_file.mimetype.startswith('video/'):
-            flash('Only video files are supported.')
-            return redirect(url_for('post'))
+            # 2. Recreate video (audio replacement, translation)
+            final_video = f"static/temp/{secrets.token_hex(8)}_final.mp4"
+            final_video = recreate_video(video_url, final_video)  # uses temp_video internally
 
-        # Save temporarily
-        filename = f"static/temp/{secrets.token_hex(8)}_{media_file.filename}"
-        media_file.save(filename)
+            # 3. Generate SEO metadata
+            title = "Amazing Content"  # could extract from original or AI
+            description = "Check out this amazing video recreated with AI for English audience."
+            tags = ["viral", "trending", "ai"]
+            title, description, tags = generate_high_rpm_seo(title, description, tags)
 
-        # Upload to YouTube
-        result = upload_youtube_video(current_user, filename, title, caption, tags, privacy)
+            metadata = {
+                'title': title,
+                'description': description,
+                'tags': tags,
+                'privacy': 'public'
+            }
 
-        # Clean up temp file
-        if os.path.exists(filename):
-            os.remove(filename)
+            # 4. Schedule upload (or immediate)
+            result = schedule_upload(upload_youtube_video, final_video, metadata, current_user)
 
-        return render_template('result.html', results={'YouTube': result})
+            # Clean up temp files
+            os.remove(temp_video)
+            # Keep final_video? we'll keep for a while, maybe delete after upload. For simplicity, keep.
+            return render_template('result.html', result=result)
 
-    return render_template('post.html')
+        except Exception as e:
+            flash(f"Error: {str(e)}")
+            return redirect(url_for('process'))
 
+    return render_template('process.html')
+
+# Ensure database created
 with app.app_context():
     db.create_all()
 

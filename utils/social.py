@@ -3,21 +3,9 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google.oauth2.credentials import Credentials
 
-def seo_optimize_caption(caption, keywords=None):
-    """Add relevant hashtags to caption for better reach"""
-    words = caption.lower().split()
-    stopwords = {'a','an','and','are','as','at','be','but','by','for','in','is','it','of','on','or','the','to','with'}
-    meaningful = [w for w in words if w not in stopwords and len(w) > 3]
-    hashtags = list(set([f"#{h}" for h in meaningful[:5] if h.isalpha()]))
-    # Add some generic tags if needed
-    if not hashtags:
-        hashtags = ["#viral", "#trending", "#youtube"]
-    final_caption = caption + "\n\n" + " ".join(hashtags[:10])
-    return final_caption
-
 def upload_youtube_video(user, video_path, title, description, tags=None, privacy='public'):
     if not user.youtube_token:
-        return "❌ YouTube not connected. Please connect your YouTube account from dashboard."
+        return "❌ YouTube not connected."
 
     try:
         creds = Credentials(
@@ -30,18 +18,17 @@ def upload_youtube_video(user, video_path, title, description, tags=None, privac
         )
         youtube = build('youtube', 'v3', credentials=creds)
 
-        # SEO optimized description
-        optimized_desc = seo_optimize_caption(description, keywords=tags)
-
         body = {
             'snippet': {
                 'title': title[:100],
-                'description': optimized_desc[:5000],
+                'description': description[:5000],
                 'tags': tags or [],
-                'categoryId': '22'  # People & Blogs
+                'categoryId': '22',
+                'defaultLanguage': 'en'
             },
             'status': {
-                'privacyStatus': privacy
+                'privacyStatus': privacy,
+                'selfDeclaredMadeForKids': False
             }
         }
         media = MediaFileUpload(video_path, chunksize=-1, resumable=True)

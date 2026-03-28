@@ -1,15 +1,117 @@
 <!DOCTYPE html>
-<html>
-<head><title>Process Video</title>
-<style>body{font-family:Arial;max-width:600px;margin:20px auto;padding:20px}input,button{width:100%;padding:10px;margin:10px 0}.btn{background:#007bff;color:#fff;border:none;cursor:pointer}</style>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Video | Auto Social Poster</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9edf2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-size: 1rem;
+            margin: 10px 0;
+        }
+        input {
+            border: 1px solid #ddd;
+            transition: 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102,126,234,0.2);
+        }
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .flash {
+            background: #ffe6e6;
+            color: #d32f2f;
+            padding: 10px;
+            border-radius: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .info {
+            background: #e8f0fe;
+            padding: 15px;
+            border-radius: 30px;
+            margin-top: 25px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .back {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back a {
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-<h2>Enter Video Link</h2>
-{% with messages = get_flashed_messages() %}{% if messages %}<div style="color:red">{% for m in messages %}{{ m }}{% endfor %}</div>{% endif %}{% endwith %}
-<form method="post">
-<input type="url" name="video_url" placeholder="YouTube, Instagram, Facebook URL" required>
-<button type="submit" class="btn">Process & Upload</button>
-</form>
-<p><a href="{{ url_for('dashboard') }}">Back</a></p>
+    <div class="container">
+        <div class="card">
+            <h2>🎬 Process Any Video</h2>
+            <p style="text-align:center; margin-bottom:20px;">Paste YouTube, Instagram, or Facebook link</p>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <form method="post">
+                <input type="url" name="video_url" placeholder="https://..." required>
+                <button type="submit">🚀 Process & Upload to YouTube</button>
+            </form>
+            <div class="info">
+                🔄 What will happen:<br>
+                1. Download video<br>
+                2. Extract audio → translate to English<br>
+                3. Generate new voiceover<br>
+                4. Add SEO tags (USA/UK/Canada)<br>
+                5. Schedule upload at peak hour (8pm EST)
+            </div>
+            <div class="back">
+                <a href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -14,4 +14,8 @@ gTTS
 apscheduler
 pytz
 pillow
-gunicorn
+diffusers
+transformers
+torch
+accelerate
+opencv-python

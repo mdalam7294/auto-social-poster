@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Channels | Auto Social Poster</title>
+    <style>
+        /* similar to dashboard style */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📺 Your YouTube Channels</h2>
+        <a href="{{ url_for('connect_youtube') }}" class="btn btn-primary">+ Add New Channel</a>
+        <div class="grid">
+            {% for ch in channels %}
+            <div class="card">
+                <h3>{{ ch.channel_title }}</h3>
+                <p>Channel ID: {{ ch.channel_id }}</p>
+                <a href="{{ url_for('remove_channel', channel_id=ch.id) }}" class="btn btn-danger">Remove</a>
+            </div>
+            {% else %}
+            <p>No channels connected yet. Click "Add New Channel" to start.</p>
+            {% endfor %}
+        </div>
+        <a href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+    </div>
+</body>
+</html>

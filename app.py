@@ -1,29 +1,33 @@
-@app.route('/create', methods=['GET', 'POST'])
+@app.route('/channels')
 @login_required
-def create():
-    if request.method == 'POST':
-        idea = request.form['idea']
-        style = request.form.get('style', 'cinematic')
-        duration = int(request.form.get('duration', 60))
-        
-        # Generate faceless video
-        video_path, scenes = generate_faceless_video(idea, style, duration)
-        
-        # SEO metadata
-        title = f"AI Generated: {idea[:60]}"
-        description = f"An AI-generated video about {idea}. Created automatically with AI visuals and voice."
-        tags = ["ai", "faceless", idea.lower().replace(" ", "")]
-        title, description, tags = generate_high_rpm_seo(title, description, tags)
-        
-        metadata = {
-            'title': title,
-            'description': description,
-            'tags': tags,
-            'privacy': 'public'
-        }
-        
-        # Schedule upload
-        result = schedule_upload(upload_youtube_video, video_path, metadata, current_user)
-        return render_template('result.html', result=result)
-    
-    return render_template('create.html')
+def channels():
+    return render_template('channels.html', channels=current_user.youtube_channels)
+
+@app.route('/connect/youtube')
+@login_required
+def connect_youtube():
+    auth_url = youtube_auth_url()
+    return redirect(auth_url)
+
+@app.route('/youtube/callback')
+@login_required
+def youtube_callback():
+    code = request.args.get('code')
+    state = request.args.get('state')
+    if code and state and youtube_callback_handler(code, state):
+        flash('YouTube channel added successfully!')
+    else:
+        flash('Failed to add channel')
+    return redirect(url_for('channels'))
+
+@app.route('/remove_channel/<int:channel_id>')
+@login_required
+def remove_channel(channel_id):
+    channel = YouTubeChannel.query.get_or_404(channel_id)
+    if channel.user_id != current_user.id:
+        flash('Unauthorized')
+        return redirect(url_for('channels'))
+    db.session.delete(channel)
+    db.session.commit()
+    flash('Channel removed')
+    return redirect(url_for('channels'))
